@@ -1,0 +1,22 @@
+.idea/
+.vscode/
+*.iml
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# dev.cmd state (PIDs of the service windows)
+.dev-pids.json
+
+# Generated output (Spring Modulith writes build/generated-spring-modulith at the repo root)
+build/
+
+# Safety net for anything the per-app .gitignore files would miss
+node_modules/
+target/
+.next/
+coverage/
+logs/
+*.log
+Thumbs.db

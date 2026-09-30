@@ -1,0 +1,638 @@
+{
+ "ielts": [
+  {
+   "city": "Tohana",
+   "slug": "ielts-classes-tohana-274"
+  },
+  {
+   "city": "Fatehabad-Haryana",
+   "slug": "ielts-classes-fatehabad-haryana-492"
+  },
+  {
+   "city": "Ambala",
+   "slug": "ielts-classes-ambala-915"
+  },
+  {
+   "city": "Bhiwani",
+   "slug": "ielts-classes-bhiwani-917"
+  },
+  {
+   "city": "Faridabad",
+   "slug": "ielts-classes-faridabad-919"
+  },
+  {
+   "city": "Gurugram",
+   "slug": "ielts-classes-gurugram-922"
+  },
+  {
+   "city": "Hisar",
+   "slug": "ielts-classes-hisar-925"
+  },
+  {
+   "city": "Jhajjar",
+   "slug": "ielts-classes-jhajjar-930"
+  },
+  {
+   "city": "Jind",
+   "slug": "ielts-classes-jind-934"
+  },
+  {
+   "city": "Kaithal",
+   "slug": "ielts-classes-kaithal-936"
+  },
+  {
+   "city": "Karnal",
+   "slug": "ielts-classes-karnal-940"
+  },
+  {
+   "city": "Kurukshetra",
+   "slug": "ielts-classes-kurukshetra-943"
+  },
+  {
+   "city": "Mahendragarh",
+   "slug": "ielts-classes-mahendragarh-945"
+  },
+  {
+   "city": "Mewat",
+   "slug": "ielts-classes-mewat-947"
+  },
+  {
+   "city": "Palwal",
+   "slug": "ielts-classes-palwal-950"
+  },
+  {
+   "city": "Panchkula",
+   "slug": "ielts-classes-panchkula-953"
+  },
+  {
+   "city": "Panipat",
+   "slug": "ielts-classes-panipat-955"
+  },
+  {
+   "city": "Rewari",
+   "slug": "ielts-classes-rewari-957"
+  },
+  {
+   "city": "Rohtak",
+   "slug": "ielts-classes-rohtak-959"
+  },
+  {
+   "city": "Sirsa",
+   "slug": "ielts-classes-sirsa-960"
+  },
+  {
+   "city": "Sonipat",
+   "slug": "ielts-classes-sonipat-962"
+  },
+  {
+   "city": "Yamunanagar",
+   "slug": "ielts-classes-yamunanagar-964"
+  },
+  {
+   "city": "Barara",
+   "slug": "ielts-classes-barara-968"
+  },
+  {
+   "city": "Naraingarh",
+   "slug": "ielts-classes-naraingarh-970"
+  },
+  {
+   "city": "Badhra",
+   "slug": "ielts-classes-badhra-972"
+  },
+  {
+   "city": "Bawani Khera",
+   "slug": "ielts-classes-bawani-khera-973"
+  },
+  {
+   "city": "Dadri-Haryana",
+   "slug": "ielts-classes-dadri-haryana-974"
+  },
+  {
+   "city": "Loharu",
+   "slug": "ielts-classes-loharu-975"
+  },
+  {
+   "city": "Siwani",
+   "slug": "ielts-classes-siwani-977"
+  },
+  {
+   "city": "Tosham",
+   "slug": "ielts-classes-tosham-979"
+  },
+  {
+   "city": "Ballabgarh",
+   "slug": "ielts-classes-ballabgarh-981"
+  },
+  {
+   "city": "Ratia",
+   "slug": "ielts-classes-ratia-982"
+  },
+  {
+   "city": "Farrukhnagar",
+   "slug": "ielts-classes-farrukhnagar-986"
+  },
+  {
+   "city": "Manesar",
+   "slug": "ielts-classes-manesar-988"
+  },
+  {
+   "city": "Pataudi",
+   "slug": "ielts-classes-pataudi-989"
+  },
+  {
+   "city": "Sohna",
+   "slug": "ielts-classes-sohna-990"
+  },
+  {
+   "city": "Adampur",
+   "slug": "ielts-classes-adampur-995"
+  },
+  {
+   "city": "Hansi",
+   "slug": "ielts-classes-hansi-997"
+  },
+  {
+   "city": "Narnaund",
+   "slug": "ielts-classes-narnaund-999"
+  },
+  {
+   "city": "Bahadurgarh",
+   "slug": "ielts-classes-bahadurgarh-1001"
+  },
+  {
+   "city": "Beri",
+   "slug": "ielts-classes-beri-1004"
+  },
+  {
+   "city": "Matenhail",
+   "slug": "ielts-classes-matenhail-1006"
+  },
+  {
+   "city": "Julana",
+   "slug": "ielts-classes-julana-1008"
+  },
+  {
+   "city": "Narwana",
+   "slug": "ielts-classes-narwana-1011"
+  },
+  {
+   "city": "Safidon",
+   "slug": "ielts-classes-safidon-1012"
+  },
+  {
+   "city": "Fatehpur Pundri",
+   "slug": "ielts-classes-fatehpur-pundri-1014"
+  },
+  {
+   "city": "Guhla",
+   "slug": "ielts-classes-guhla-1017"
+  },
+  {
+   "city": "Assandh",
+   "slug": "ielts-classes-assandh-1019"
+  },
+  {
+   "city": "Gharaunda",
+   "slug": "ielts-classes-gharaunda-1020"
+  },
+  {
+   "city": "Indri",
+   "slug": "ielts-classes-indri-1023"
+  },
+  {
+   "city": "Nilokheri",
+   "slug": "ielts-classes-nilokheri-1026"
+  },
+  {
+   "city": "Pehowa",
+   "slug": "ielts-classes-pehowa-1033"
+  },
+  {
+   "city": "Shahbad-Haryana",
+   "slug": "ielts-classes-shahbad-haryana-1039"
+  },
+  {
+   "city": "Thanesar",
+   "slug": "ielts-classes-thanesar-1042"
+  },
+  {
+   "city": "Narnaul",
+   "slug": "ielts-classes-narnaul-1046"
+  },
+  {
+   "city": "Ferozepur Jhirka",
+   "slug": "ielts-classes-ferozepur-jhirka-1048"
+  },
+  {
+   "city": "Nuh",
+   "slug": "ielts-classes-nuh-1051"
+  },
+  {
+   "city": "Punahana",
+   "slug": "ielts-classes-punahana-1053"
+  },
+  {
+   "city": "Taoru",
+   "slug": "ielts-classes-taoru-1055"
+  },
+  {
+   "city": "Hathin",
+   "slug": "ielts-classes-hathin-1057"
+  },
+  {
+   "city": "Hodal",
+   "slug": "ielts-classes-hodal-1058"
+  },
+  {
+   "city": "Kalka",
+   "slug": "ielts-classes-kalka-1060"
+  },
+  {
+   "city": "Israna",
+   "slug": "ielts-classes-israna-1061"
+  },
+  {
+   "city": "Samalkha",
+   "slug": "ielts-classes-samalkha-1066"
+  },
+  {
+   "city": "Bawal",
+   "slug": "ielts-classes-bawal-1069"
+  },
+  {
+   "city": "Kosli",
+   "slug": "ielts-classes-kosli-1072"
+  },
+  {
+   "city": "Maham",
+   "slug": "ielts-classes-maham-1075"
+  },
+  {
+   "city": "Sampla",
+   "slug": "ielts-classes-sampla-1079"
+  },
+  {
+   "city": "Dabwali",
+   "slug": "ielts-classes-dabwali-1082"
+  },
+  {
+   "city": "Ellenabad",
+   "slug": "ielts-classes-ellenabad-1085"
+  },
+  {
+   "city": "Rania-Haryana",
+   "slug": "ielts-classes-rania-haryana-1087"
+  },
+  {
+   "city": "Ganaur",
+   "slug": "ielts-classes-ganaur-1091"
+  },
+  {
+   "city": "Gohana",
+   "slug": "ielts-classes-gohana-1094"
+  },
+  {
+   "city": "Kharkhoda",
+   "slug": "ielts-classes-kharkhoda-1098"
+  },
+  {
+   "city": "Bilaspur-Haryana",
+   "slug": "ielts-classes-bilaspur-haryana-1101"
+  },
+  {
+   "city": "Chhachhrauli",
+   "slug": "ielts-classes-chhachhrauli-1104"
+  },
+  {
+   "city": "Jagadhri",
+   "slug": "ielts-classes-jagadhri-1108"
+  },
+  {
+   "city": "Bhattu Kalan",
+   "slug": "ielts-classes-bhattu-kalan-6306"
+  },
+  {
+   "city": "Gurgaon",
+   "slug": "ielts-classes-gurgaon-7379"
+  }
+ ],
+ "pte": [
+  {
+   "city": "Tohana",
+   "slug": "pte-classes-tohana-274"
+  },
+  {
+   "city": "Fatehabad-Haryana",
+   "slug": "pte-classes-fatehabad-haryana-492"
+  },
+  {
+   "city": "Ambala",
+   "slug": "pte-classes-ambala-915"
+  },
+  {
+   "city": "Bhiwani",
+   "slug": "pte-classes-bhiwani-917"
+  },
+  {
+   "city": "Faridabad",
+   "slug": "pte-classes-faridabad-919"
+  },
+  {
+   "city": "Gurugram",
+   "slug": "pte-classes-gurugram-922"
+  },
+  {
+   "city": "Hisar",
+   "slug": "pte-classes-hisar-925"
+  },
+  {
+   "city": "Jhajjar",
+   "slug": "pte-classes-jhajjar-930"
+  },
+  {
+   "city": "Jind",
+   "slug": "pte-classes-jind-934"
+  },
+  {
+   "city": "Kaithal",
+   "slug": "pte-classes-kaithal-936"
+  },
+  {
+   "city": "Karnal",
+   "slug": "pte-classes-karnal-940"
+  },
+  {
+   "city": "Kurukshetra",
+   "slug": "pte-classes-kurukshetra-943"
+  },
+  {
+   "city": "Mahendragarh",
+   "slug": "pte-classes-mahendragarh-945"
+  },
+  {
+   "city": "Mewat",
+   "slug": "pte-classes-mewat-947"
+  },
+  {
+   "city": "Palwal",
+   "slug": "pte-classes-palwal-950"
+  },
+  {
+   "city": "Panchkula",
+   "slug": "pte-classes-panchkula-953"
+  },
+  {
+   "city": "Panipat",
+   "slug": "pte-classes-panipat-955"
+  },
+  {
+   "city": "Rewari",
+   "slug": "pte-classes-rewari-957"
+  },
+  {
+   "city": "Rohtak",
+   "slug": "pte-classes-rohtak-959"
+  },
+  {
+   "city": "Sirsa",
+   "slug": "pte-classes-sirsa-960"
+  },
+  {
+   "city": "Sonipat",
+   "slug": "pte-classes-sonipat-962"
+  },
+  {
+   "city": "Yamunanagar",
+   "slug": "pte-classes-yamunanagar-964"
+  },
+  {
+   "city": "Barara",
+   "slug": "pte-classes-barara-968"
+  },
+  {
+   "city": "Naraingarh",
+   "slug": "pte-classes-naraingarh-970"
+  },
+  {
+   "city": "Badhra",
+   "slug": "pte-classes-badhra-972"
+  },
+  {
+   "city": "Bawani Khera",
+   "slug": "pte-classes-bawani-khera-973"
+  },
+  {
+   "city": "Dadri-Haryana",
+   "slug": "pte-classes-dadri-haryana-974"
+  },
+  {
+   "city": "Loharu",
+   "slug": "pte-classes-loharu-975"
+  },
+  {
+   "city": "Siwani",
+   "slug": "pte-classes-siwani-977"
+  },
+  {
+   "city": "Tosham",
+   "slug": "pte-classes-tosham-979"
+  },
+  {
+   "city": "Ballabgarh",
+   "slug": "pte-classes-ballabgarh-981"
+  },
+  {
+   "city": "Ratia",
+   "slug": "pte-classes-ratia-982"
+  },
+  {
+   "city": "Farrukhnagar",
+   "slug": "pte-classes-farrukhnagar-986"
+  },
+  {
+   "city": "Manesar",
+   "slug": "pte-classes-manesar-988"
+  },
+  {
+   "city": "Pataudi",
+   "slug": "pte-classes-pataudi-989"
+  },
+  {
+   "city": "Sohna",
+   "slug": "pte-classes-sohna-990"
+  },
+  {
+   "city": "Adampur",
+   "slug": "pte-classes-adampur-995"
+  },
+  {
+   "city": "Hansi",
+   "slug": "pte-classes-hansi-997"
+  },
+  {
+   "city": "Narnaund",
+   "slug": "pte-classes-narnaund-999"
+  },
+  {
+   "city": "Bahadurgarh",
+   "slug": "pte-classes-bahadurgarh-1001"
+  },
+  {
+   "city": "Beri",
+   "slug": "pte-classes-beri-1004"
+  },
+  {
+   "city": "Matenhail",
+   "slug": "pte-classes-matenhail-1006"
+  },
+  {
+   "city": "Julana",
+   "slug": "pte-classes-julana-1008"
+  },
+  {
+   "city": "Narwana",
+   "slug": "pte-classes-narwana-1011"
+  },
+  {
+   "city": "Safidon",
+   "slug": "pte-classes-safidon-1012"
+  },
+  {
+   "city": "Fatehpur Pundri",
+   "slug": "pte-classes-fatehpur-pundri-1014"
+  },
+  {
+   "city": "Guhla",
+   "slug": "pte-classes-guhla-1017"
+  },
+  {
+   "city": "Assandh",
+   "slug": "pte-classes-assandh-1019"
+  },
+  {
+   "city": "Gharaunda",
+   "slug": "pte-classes-gharaunda-1020"
+  },
+  {
+   "city": "Indri",
+   "slug": "pte-classes-indri-1023"
+  },
+  {
+   "city": "Nilokheri",
+   "slug": "pte-classes-nilokheri-1026"
+  },
+  {
+   "city": "Pehowa",
+   "slug": "pte-classes-pehowa-1033"
+  },
+  {
+   "city": "Shahbad-Haryana",
+   "slug": "pte-classes-shahbad-haryana-1039"
+  },
+  {
+   "city": "Thanesar",
+   "slug": "pte-classes-thanesar-1042"
+  },
+  {
+   "city": "Narnaul",
+   "slug": "pte-classes-narnaul-1046"
+  },
+  {
+   "city": "Ferozepur Jhirka",
+   "slug": "pte-classes-ferozepur-jhirka-1048"
+  },
+  {
+   "city": "Nuh",
+   "slug": "pte-classes-nuh-1051"
+  },
+  {
+   "city": "Punahana",
+   "slug": "pte-classes-punahana-1053"
+  },
+  {
+   "city": "Taoru",
+   "slug": "pte-classes-taoru-1055"
+  },
+  {
+   "city": "Hathin",
+   "slug": "pte-classes-hathin-1057"
+  },
+  {
+   "city": "Hodal",
+   "slug": "pte-classes-hodal-1058"
+  },
+  {
+   "city": "Kalka",
+   "slug": "pte-classes-kalka-1060"
+  },
+  {
+   "city": "Israna",
+   "slug": "pte-classes-israna-1061"
+  },
+  {
+   "city": "Samalkha",
+   "slug": "pte-classes-samalkha-1066"
+  },
+  {
+   "city": "Bawal",
+   "slug": "pte-classes-bawal-1069"
+  },
+  {
+   "city": "Kosli",
+   "slug": "pte-classes-kosli-1072"
+  },
+  {
+   "city": "Maham",
+   "slug": "pte-classes-maham-1075"
+  },
+  {
+   "city": "Sampla",
+   "slug": "pte-classes-sampla-1079"
+  },
+  {
+   "city": "Dabwali",
+   "slug": "pte-classes-dabwali-1082"
+  },
+  {
+   "city": "Ellenabad",
+   "slug": "pte-classes-ellenabad-1085"
+  },
+  {
+   "city": "Rania-Haryana",
+   "slug": "pte-classes-rania-haryana-1087"
+  },
+  {
+   "city": "Ganaur",
+   "slug": "pte-classes-ganaur-1091"
+  },
+  {
+   "city": "Gohana",
+   "slug": "pte-classes-gohana-1094"
+  },
+  {
+   "city": "Kharkhoda",
+   "slug": "pte-classes-kharkhoda-1098"
+  },
+  {
+   "city": "Bilaspur-Haryana",
+   "slug": "pte-classes-bilaspur-haryana-1101"
+  },
+  {
+   "city": "Chhachhrauli",
+   "slug": "pte-classes-chhachhrauli-1104"
+  },
+  {
+   "city": "Jagadhri",
+   "slug": "pte-classes-jagadhri-1108"
+  },
+  {
+   "city": "Bhattu Kalan",
+   "slug": "pte-classes-bhattu-kalan-6306"
+  },
+  {
+   "city": "Gurgaon",
+   "slug": "pte-classes-gurgaon-7379"
+  }
+ ]
+}

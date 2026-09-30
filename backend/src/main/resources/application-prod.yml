@@ -1,0 +1,30 @@
+# Production: JSON logs (Elastic Common Schema), one object per line, ready for Loki / ELK / CloudWatch.
+# The MDC keys requestId, tenantId and userId become fields, so a support request can be traced by its request id.
+logging:
+  structured:
+    format:
+      console: ecs
+      file: ecs
+  level:
+    com.softzenith.crm: info
+
+# No fallbacks in production: a missing variable stops the app instead of running on dev defaults.
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+crm:
+  auth:
+    supabase-url: ${SUPABASE_URL}
+  platform:
+    # Required: platform-admin sessions must survive restarts and be the same on every instance.
+    jwt-secret: ${CRM_PLATFORM_JWT_SECRET}
+
+# API docs are for development; the typed client is generated from a local backend.
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

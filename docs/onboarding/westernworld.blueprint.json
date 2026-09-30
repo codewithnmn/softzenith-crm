@@ -1,0 +1,20 @@
+{
+  "business": {
+    "name": "Western World Visa Services",
+    "slug": "westernworld",
+    "defaultRegion": "IN",
+    "timezone": "Asia/Kolkata"
+  },
+  "settings": {
+    "leadNumberPrefix": "WWV",
+    "serviceInterests": ["Study Visa", "Visitor Visa", "IELTS Coaching", "PTE Coaching", "Admission Guidance", "Other"],
+    "countries": ["Canada", "USA", "UK", "Australia", "New Zealand", "Ireland", "Germany", "France", "Singapore", "Other"],
+    "senderName": "Western World Visa Services",
+    "welcomeEmail": true,
+    "welcomeWhatsApp": true,
+    "studentUpdates": true,
+    "features": ["LEADS_CORE", "TEAM_AND_STUDENTS"]
+  },
+  "branches": [],
+  "staff": []
+}

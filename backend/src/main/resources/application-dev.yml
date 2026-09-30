@@ -1,0 +1,18 @@
+# Local development: seeds a neutral demo tenant, 'Demo Visas' (slug demo) (see devdata.DevDataSeeder).
+crm:
+  dev-data:
+    enabled: true
+  auth:
+    # Sign in with just a phone number (no OTP) until Supabase is set up. NEVER in production.
+    dev-login:
+      enabled: true
+      secret: local-dev-only-secret-change-me-0123456789
+  platform:
+    # Local SoftZenith platform admin (http://localhost:3000/platform). NEVER these values in production.
+    bootstrap-admin:
+      username: softzenith
+      password: local-platform-admin
+
+logging:
+  level:
+    com.softzenith.crm: debug

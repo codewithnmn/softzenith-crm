@@ -1,0 +1,118 @@
+spring:
+  application:
+    name: crm
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/crm}
+    username: ${DB_USER:crm_app}
+    password: ${DB_PASSWORD:crm_app}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    locations: classpath:db/migration
+  mvc:
+    problemdetails:
+      enabled: true
+  modulith:
+    events:
+      # Events whose listener did not finish (e.g. crash mid-notification) are re-delivered on startup (at-least-once).
+      republish-outstanding-events-on-restart: true
+      # Completed publications are deleted: event payloads carry enquirer details (name, phone, email, message),
+      # which must not pile up in event_publication once the notifications are done.
+      completion-mode: delete
+  task:
+    execution:
+      simple:
+        # Async notification listeners run on virtual threads; cap how many send at once so a burst of enquiries
+        # cannot flood the SMTP / WhatsApp provider.
+        concurrency-limit: 16
+  mail:
+    # Local default is Mailpit (http://localhost:8025). Set MAIL_HOST/PORT/USERNAME/PASSWORD for a real SMTP provider.
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Supabase Auth issues the tokens (phone OTP); we only verify them. Signing keys are fetched lazily.
+          issuer-uri: ${crm.auth.supabase-url}/auth/v1
+          jwk-set-uri: ${crm.auth.supabase-url}/auth/v1/.well-known/jwks.json
+          jws-algorithms: ES256, RS256
+          audiences: authenticated
+
+crm:
+  public-intake:
+    # Enquiry rate limits (per client IP, per phone number within a tenant, per tenant overall).
+    rate-limit:
+      per-ip-per-minute: 5
+      per-ip-per-hour: 30
+      per-phone-per-hour: 5
+      per-tenant-per-hour: 1000
+    # Cloudflare Turnstile. Empty secret = captcha not required (local development).
+    captcha:
+      turnstile-secret: ${TURNSTILE_SECRET:}
+  app:
+    # Links in emails point here
+    frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  notifications:
+    mail-from: ${MAIL_FROM:no-reply@softzenith.local}
+    # At most this many messages of one kind to one enquirer address / phone per 24 h (stops the public form
+    # being used to bombard someone). Staff alerts are not capped.
+    enquirer-daily-cap: 5
+    whatsapp:
+      provider: demo
+  auth:
+    # Placeholder until the real project exists; set SUPABASE_URL=https://<project-ref>.supabase.co
+    supabase-url: ${SUPABASE_URL:https://crm-dev-placeholder.supabase.co}
+  platform:
+    # Signs SoftZenith platform-admin sessions (/api/platform). Empty = a random key per start (sessions end on restart).
+    jwt-secret: ${CRM_PLATFORM_JWT_SECRET:}
+    # Creates the first platform admin on startup when none exists yet (never changes an existing one).
+    bootstrap-admin:
+      username: ${CRM_PLATFORM_ADMIN_USERNAME:}
+      password: ${CRM_PLATFORM_ADMIN_PASSWORD:}
+
+server:
+  port: ${PORT:8081}
+  # Behind the Next.js proxy / a load balancer: the client IP (used by the enquiry rate limit) comes from
+  # X-Forwarded-For, trusted only from internal proxy addresses (Tomcat's default private ranges).
+  forward-headers-strategy: native
+
+# Every line carries [request id | tenant | user] (see shared.logging.RequestLoggingFilter). Files roll daily/at 20 MB
+# and are kept for 30 days. Profile "prod" switches both outputs to JSON (application-prod.yml).
+# Troubleshooting switches: logging.level.org.hibernate.SQL=debug (SQL), logging.level.com.softzenith.crm=debug.
+logging:
+  pattern:
+    level: "%5p [%X{requestId:-}|%X{tenantId:-}|%X{userId:-}]"
+  file:
+    name: ${LOG_FILE:logs/crm.log}
+  logback:
+    rollingpolicy:
+      max-file-size: 20MB
+      max-history: 30
+      total-size-cap: 2GB
+  level:
+    root: info
+    crm.access: info
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, modulith
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
