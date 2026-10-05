@@ -27,7 +27,9 @@ $StateFile = Join-Path $Root '.dev-pids.json'
 $Apps = @(
     @{ Name = 'Backend API'; Port = 8081; Dir = 'backend'; Wait = 240
        Cmd = '.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"'
-       Check = 'http://localhost:8081/actuator/health'; Open = 'http://localhost:8081/swagger-ui.html' },
+       # Readiness, not /actuator/health: the aggregate also folds in the mail indicator, so a missing
+       # Mailpit would report 503 and make the wait below time out on an API that is actually serving.
+       Check = 'http://localhost:8081/actuator/health/readiness'; Open = 'http://localhost:8081/swagger-ui.html' },
     @{ Name = 'Staff UI'; Port = 3000; Dir = 'frontend'; Wait = 120
        Cmd = 'npm run dev'
        Check = 'http://localhost:3000/login'; Open = 'http://localhost:3000' },
@@ -113,12 +115,18 @@ function Start-Infra {
         & (Join-Path $PgBin 'pg_ctl.exe') -D $PgData -l (Join-Path $PgData 'server.log') -w start | Out-Null
         if (-not (Test-Postgres)) { throw "Postgres did not start; see $PgData\server.log" }
     }
-    if (Get-ListenerPid 8025) {
+    # 1025 is the SMTP port the backend sends through; 8025 is only the inbox UI.
+    if (Get-ListenerPid 1025) {
         Write-Host 'Mailpit already running.' -ForegroundColor DarkGray
     } elseif (Test-Path $Mailpit) {
         Start-Process -FilePath $Mailpit -WindowStyle Hidden
+        for ($i = 0; $i -lt 20; $i++) {
+            if (Get-ListenerPid 1025) { break }
+            Start-Sleep -Milliseconds 500
+        }
+        if (-not (Get-ListenerPid 1025)) { Write-Warning 'Mailpit did not open SMTP port 1025; sending email will fail.' }
     } else {
-        Write-Warning "Mailpit not found at $Mailpit; emails will fail to send (the app keeps working)."
+        Write-Warning "Mailpit not found at $Mailpit; sending email will fail (the rest of the app keeps working)."
     }
 }
 
