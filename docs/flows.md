@@ -84,7 +84,7 @@ flowchart LR
   API -.->|"checks captcha when configured"| CF["Cloudflare Turnstile"]
 ```
 
-*Where in the code:* `frontend/next.config.ts · sites/westernworld/next.config.ts · backend/src/main/java/com/softzenith/crm/*`
+*Where in the code:* `frontend/next.config.ts · westernworld-website repo: next.config.ts · backend/src/main/java/com/softzenith/crm/*`
 
 <a id="arch-modules"></a>
 ### Backend modules and how they talk
@@ -283,12 +283,12 @@ sequenceDiagram
   N->>D: one notification_log row per message, event completed
 ```
 
-*Where in the code:* `sites/westernworld/components/EnquiryForm.tsx · lib/enquiry.ts · lead/web/PublicEnquiryController · lead/LeadService.intake · notification/*`
+*Where in the code:* `westernworld-website repo: components/EnquiryForm.tsx, lib/enquiry.ts · lead/web/PublicEnquiryController · lead/LeadService.intake · notification/*`
 
 <a id="arch-frontends"></a>
 ### The two front-end apps
 
-Both are Next.js 16 apps with client-side pages. The staff app builds its menu from the signed-in user's permissions and calls the API through a client whose types are generated from the backend's OpenAPI spec (`npm run gen:api`). The website is content: pages rendered from JSON scraped from the old site, one enquiry form component used everywhere, and redirects that keep every old URL working.
+Both are Next.js 16 apps with client-side pages. The staff app builds its menu from the signed-in user's permissions and calls the API through a client whose types are generated from the backend's OpenAPI spec (`npm run gen:api`). Tenant websites live in their own repositories (Western World: `codewithnmn/westernworld-website`): content pages, one enquiry form component used everywhere, redirects that keep every old URL working, and the public enquiry API as their only link to the CRM.
 
 ```mermaid
 flowchart LR
@@ -301,7 +301,7 @@ flowchart LR
     P2 --> CL["lib/api.ts<br/>typed client, adds token<br/>and X-Tenant-ID"]
     EQ["app/enquiry/[tenant]<br/>public form"]
   end
-  subgraph SITE["sites/westernworld/ : public website"]
+  subgraph SITE["westernworld-website repo : tenant website"]
     direction TB
     CT["content/*.json, copy.ts"] --> PG["app/** : 235 pages<br/>countries, universities, courses, cities"]
     PG --> EF["components/EnquiryForm<br/>every form on the site"]
@@ -313,7 +313,7 @@ flowchart LR
   LE -->|"public endpoints only"| BE
 ```
 
-*Where in the code:* `frontend/app/* · frontend/components/AppShell.tsx · frontend/lib/api.ts · sites/westernworld/app/* · sites/westernworld/content/*`
+*Where in the code:* `frontend/app/* · frontend/components/AppShell.tsx · frontend/lib/api.ts · westernworld-website repo: app/*, content/*`
 
 <a id="tenant-onboarding"></a>
 ### Onboarding a new business (tenant)
@@ -919,7 +919,7 @@ Start from what the person sees. Most answers are in the lead page (history and 
 <a id="dbg-codemap"></a>
 ### Where the code is for each feature
 
-Paths are relative to `backend/src/main/java/com/softzenith/crm/`, `frontend/` and `sites/westernworld/`. Tests mirror the backend packages under `backend/src/test/java/...`.
+Paths are relative to `backend/src/main/java/com/softzenith/crm/` and `frontend/`; website paths are in the `westernworld-website` repo. Tests mirror the backend packages under `backend/src/test/java/...`.
 
 | Feature | Backend | Front end | Tests |
 |---|---|---|---|
@@ -950,7 +950,7 @@ Start in this order; each needs the one before it. Everything runs without cloud
 | Mailpit | 1025 SMTP, 8025 inbox | `"%LOCALAPPDATA%\Programs\mailpit\mailpit.exe"` | Every local email lands at http://localhost:8025 |
 | Backend API | 8081 | `cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev` | http://localhost:8081/actuator/health, Swagger at `/swagger-ui.html`, log in `backend/logs/crm.log` |
 | CRM staff app | 3000 | `cd frontend && npm run dev` (or `npm run build` then `npx next start -p 3000`) | http://localhost:3000/login |
-| Western World website | 3001 | `cd sites/westernworld && npm run dev -- -p 3001` | http://localhost:3001 |
+| Western World website (own repo) | 3001 | `cd ../westernworld-website && npm run dev -- -p 3001`, or list it in `.dev-sites.json` for `.\dev` | http://localhost:3001 |
 | Backend tests | none | `cd backend && ./mvnw test` (embedded Postgres + GreenMail, no Docker) | Must be green before a task is done |
 
 **Stop everything (PowerShell)**
@@ -987,7 +987,7 @@ Environment variables for deployment and the `application.yml` keys worth knowin
 | `NEXT_PUBLIC_CRM_TENANT` | website | westernworld | Tenant that receives the website's enquiries |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | both front ends | empty | Shows the captcha widget on enquiry forms |
 
-*Where in the code:* `backend/.env.example · frontend/.env.example · sites/westernworld/.env.example · backend/src/main/resources/application*.yml`
+*Where in the code:* `backend/.env.example · frontend/.env.example · backend/src/main/resources/application*.yml`
 
 <a id="dbg-sql"></a>
 ### Useful database queries

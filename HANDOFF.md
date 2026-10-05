@@ -1,4 +1,4 @@
-# Handoff — 2026-09-30 (WW1 + PA1)
+# Handoff — 2026-10-05 (MOVE1: website moved to its own repo)
 
 Project rules, stack, conventions and settled decisions: **`CLAUDE.md`**. This file is the current state.
 
@@ -27,6 +27,7 @@ Project rules, stack, conventions and settled decisions: **`CLAUDE.md`**. This f
 | WW1 | Western World is the first tenant (owner, 30 Sep); EaseMyViz removed everywhere (future B2B business of Western World); dev seed → neutral "Demo Visas" (`demo`) | done |
 | PA1 | SoftZenith platform console: admin login (username+password), own security chain, audit; onboarding wizard (preview → go live) | done (v1: create only) |
 | PA2 | Console: edit a live business (settings, feature gates, suspend), change admin password, more admins, TOTP | todo |
+| GH1 | Publish to GitHub (`codewithnmn/softzenith-crm`), `main` + `develop` branches, README rewrite for new developers | done (README first-time-setup section pending, see session) |
 
 ## Roadmap (owner-approved 25 Sep 2026, from the role-dashboard mockups)
 
@@ -40,7 +41,9 @@ spec: menu items appear only when their module exists (no fake counts).
 | A1 | Tailwind v4 + shadcn/ui; new AppShell (dark sidebar built from permissions, top bar, user menu); port all existing pages off Pico | done |
 | R1 | Repeat enquiries: lead moves to top (`last_enquiry_at`, `enquiry_count`), staff alert, student acknowledgement | done |
 | N1 | Counsellor gets `LEAD_CHANGE_STATUS`; student email + WhatsApp on assign / status change / reopen | done |
-| W1 | Western World website (`sites/westernworld`), all old content + URLs, every form → CRM public intake (tenant `westernworld` since 30 Sep) | done |
+| W1 | Western World website, all old content + URLs, every form → CRM public intake (tenant `westernworld` since 30 Sep) | done; **moved to `codewithnmn/westernworld-website`** (MOVE1) |
+| W2 | Western World website redesign, announcement bar, News & blogs | done in `westernworld-website` (`develop`); status there |
+| MOVE1 | Website moved out of this repo; the public intake API is the only contract; `.\dev` starts tenant sites from `.dev-sites.json` | done (branch `chore/extract-westernworld-website`) |
 | L1 | Backend logging: request id, tenant/user on every line, access log, error logging, masked PII, rolling files, JSON in prod | done |
 | A2 | Public enquiry page (layout done in A1); tenant branding in `TenantSettings` (logo, colour, tagline); hero copy from settings | next |
 | A3 | Front desk workspace (Receptionist): quick enquiry capture, unassigned queue, one-click assign, scoped counts endpoint | todo |
@@ -57,7 +60,99 @@ spec: menu items appear only when their module exists (no fake counts).
 | DOC2 | Upload by student or counsellor, verify/reject by staff, events into the feed | todo |
 | later | Applications, offers, visa cases, IELTS/PTE, payments, reports (PRD Phases 4–5) | todo |
 
-## Session (latest): WW1 + PA1 — Western World first tenant; SoftZenith onboarding console
+## Session (latest): MOVE1 — Western World website moved to its own repo (owner, 5 Oct)
+
+### What I did
+- New repo `codewithnmn/westernworld-website` (created by the owner): the history of `sites/westernworld` extracted with
+  `git subtree split` and merged in (`main` = the site as imported). The W2 redesign (announcement bar, News & blogs,
+  services, success stories; never committed here) is on its `develop`, with its own README (CRM API contract,
+  content guide), HANDOFF and CLAUDE. All W2 details and open questions are in that repo's `HANDOFF.md`.
+- This repo: `sites/` removed (173 files). README, CLAUDE.md (new rule: this repo is the CRM only; tenant websites live
+  in their own repos; keep the public intake API backward compatible), `docs/onboarding.md`, `docs/generate_flows.py`
+  + regenerated `docs/flows.md`.
+- `scripts/dev.ps1`: tenant sites are no longer hard-coded; `.\dev` starts those listed in the untracked
+  `.dev-sites.json` (example: `.dev-sites.example.json`). The owner's local file points at `../westernworld-website` on 3001.
+- Committed separately on the branch: the pending DEV1 dev-launcher fix and the GH1 branching rule in CLAUDE.md.
+
+### Assumptions I made
+- The onboarding blueprint `docs/onboarding/westernworld.blueprint.json` and the `westernworld` examples in onboarding
+  code/tests stay: they are CRM configuration and data for the tenant, not website code.
+- The shareable flows artifact (claude.ai) was not republished; `docs/flows.md` is regenerated.
+
+### What I could NOT verify
+- Backend and frontend suites not re-run: no backend or staff-UI code changed (only docs, the dev script and the removed folder).
+
+### Verification status
+- Website repo: fresh `npm ci`, lint, `tsc`, build (252 pages) pass; `main` and `develop` pushed.
+  Its `package-lock.json` had drifted from `package.json` (npm ci failed); regenerated there.
+- `.\dev status` reads `.dev-sites.json` and reports the site from `../westernworld-website`; site serving on :3001 from the new repo.
+- `python -W error::SyntaxWarning docs/generate_flows.py`: 34 sections, no warnings; no `sites/westernworld` left in docs.
+
+### Git status
+- Branch `chore/extract-westernworld-website` (from `develop`), not merged; pushed only if the owner asks.
+
+## Session: DEV1 — `.\dev` hung waiting for the backend (health gate)
+
+### What I built
+- `scripts/dev.ps1`: the Backend API readiness gate now polls `/actuator/health/readiness` instead of the aggregate
+  `/actuator/health`. Root cause: the aggregate folds in Spring Boot's auto-configured `MailHealthIndicator`, so with
+  Mailpit not listening on SMTP 1025 the endpoint returns **503**. `Test-Up` only accepts `StatusCode -lt 500`, so the
+  script never saw the API as up and burned its full 240 s `Wait` (then the UIs) printing dots — the "stuck" symptom.
+  The API itself was healthy throughout; `readiness` is also the semantically correct "is it serving traffic" probe.
+- `scripts/dev.ps1` `Start-Infra`: Mailpit is now detected on port **1025** (the SMTP port the backend actually dials)
+  rather than 8025 (inbox UI only), and the script waits up to 10 s for 1025 to open, warning if it never does.
+  The "Mailpit not found" warning no longer claims the app keeps working unqualified.
+
+### Assumptions I made
+- The `liveness`/`readiness` health groups are available — confirmed empirically (both returned 200 while the
+  aggregate was 503). No config change was needed to expose them.
+- Losing the mail/db checks from the start-up gate is acceptable: Flyway and Hikari already fail the boot loudly if
+  Postgres is wrong, and a missing Mailpit should not block a dev start.
+
+### What I could NOT verify
+- The no-Mailpit path end to end (Mailpit was installed and healthy on this machine). The 503 → readiness-200
+  behaviour was reproduced directly against the running API, which is the mechanism the fix targets.
+
+### Verification status
+- Reproduced: with Mailpit down, `/actuator/health` = 503 `{"status":"DOWN"}` while `health/readiness` = 200 `UP`;
+  starting Mailpit flipped the aggregate to 200 with nothing else changed.
+- `.\dev` after the fix: all five services report `running` (Postgres, Mailpit, API 8081, Staff UI 3000, WW site 3001).
+- Smoke test: `POST /api/v1/dev/login` (9000000001) → `GET /api/v1/me/memberships` → Demo Visas / ADMIN. 200s.
+- Test suites not re-run: the change is confined to the dev launcher script, which no test covers.
+
+### Git status
+- Uncommitted on `develop`: `scripts/dev.ps1`, plus the pre-existing `CLAUDE.md` / `HANDOFF.md` edits.
+
+## Session: GH1 — repo published to GitHub, branching model, README
+
+### What I built
+- Root `.gitignore` gained `build/` (Spring Modulith output) and safety-net patterns; the per-app `.gitignore` files already
+  cover `node_modules`, `.next`, `target`, `logs`, `.env*` (except `.env.example`).
+- Initial import committed; merged with GitHub's auto-created "Initial commit" (kept the local `README.md`).
+  Remote `origin` = `https://codewithnmn@github.com/codewithnmn/softzenith-crm.git`. `develop` created from `main` and pushed.
+- Repo-local git config pins the GitHub account (`credential.https://github.com.username=codewithnmn`, `useHttpPath`),
+  so the owner's other account (`namankau`, used for another project) keeps working. Nothing global was changed.
+- `README.md` rewritten: `.\dev` quick start, manual run, dev sign-in table, layout, git workflow, tests, config, troubleshooting.
+- `CLAUDE.md` ground rule 4 now describes `main` / `develop` and the feature-branch flow.
+
+### Assumptions I made
+- `develop` is the integration branch (PRs target it); `main` only gets releases, or an explicit owner-requested publish.
+- The repo stays public. It exposes dev-only credentials (`application-dev.yml`) and the Western World tenant name.
+
+### What I could NOT verify
+- A clean-machine run of the README steps (winget IDs, Postgres binaries link).
+- Commit email: commits are authored `Naman <naman.kaushik06@gmail.com>`; if that email is not on `codewithnmn`, they will
+  not link to that profile.
+
+### Verification status
+- No code changed; backend and frontend suites not re-run this session.
+
+### Git status
+- `origin/main` and `origin/develop` are both at `7654c9e` (README rewrite). Working branch: `develop`.
+- Uncommitted: this `HANDOFF.md` and the `CLAUDE.md` rule change.
+- Not done yet: the README "First time here? 6 steps" section (edits were blocked by a tooling error); redo it.
+
+## Session: WW1 + PA1 — Western World first tenant; SoftZenith onboarding console
 
 ### What I built
 - **WW1 rename**: EaseMyViz removed from code, tests, docs, memory; `sites/westernworld` defaults to tenant
