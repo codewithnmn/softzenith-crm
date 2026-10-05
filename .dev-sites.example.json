@@ -1,0 +1,3 @@
+[
+  { "Name": "Tenant website", "Dir": "../<tenant>-website", "Port": 3001 }
+]

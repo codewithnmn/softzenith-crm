@@ -6,8 +6,9 @@
 .env.*
 !.env.example
 
-# dev.cmd state (PIDs of the service windows)
+# dev.cmd state (PIDs of the service windows) and the local list of tenant websites to start
 .dev-pids.json
+.dev-sites.json
 
 # Generated output (Spring Modulith writes build/generated-spring-modulith at the repo root)
 build/
