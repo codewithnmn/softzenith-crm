@@ -89,7 +89,8 @@ spec: menu items appear only when their module exists (no fake counts).
 - `python -W error::SyntaxWarning docs/generate_flows.py`: 34 sections, no warnings; no `sites/westernworld` left in docs.
 
 ### Git status
-- Branch `chore/extract-westernworld-website` (from `develop`), not merged; pushed only if the owner asks.
+- Branch `chore/extract-westernworld-website` pushed; PRs (owner request, opened as `codewithnmn`):
+  #1 → `develop`, #2 → `main`. Not merged.
 
 ## Session: DEV1 — `.\dev` hung waiting for the backend (health gate)
 
