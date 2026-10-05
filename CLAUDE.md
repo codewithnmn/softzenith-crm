@@ -34,8 +34,12 @@ Tenant differences are data (tenant settings, roles/permissions, branches), neve
    justified in `HANDOFF.md`.
 3. **Update `HANDOFF.md` at the end of every task or session**, using the template below. It is how
    Claude Code, Codex, or a human picks up where the last one stopped.
-4. **Git: commit or push only when the owner asks.** When asked: branch `feat/<slug>` / `fix/<slug>`,
-   conventional commits, never push to `main`.
+4. **Git: commit or push only when the owner asks.** The repo is public on GitHub
+   (`codewithnmn/softzenith-crm`, owner account `codewithnmn`; remote and credential settings are pinned per
+   repo so the owner's other account for another project is unaffected). Branches: `main` = releases,
+   `develop` = continuous development. When asked: branch `feat/<slug>` / `fix/<slug>` from `develop`,
+   conventional commits, PR into `develop`; `develop` → `main` only for a release. Never push to `main`
+   unless the owner explicitly asks for it in that message (e.g. a README/docs publish to both branches).
 5. **Never commit secrets.** New secrets go in `.env.example` with an empty value, noted in `HANDOFF.md`.
 6. **Ambiguity:** if the owner is present, ask. If running unattended, pick the reading most consistent
    with the PRD, implement it, and record the assumption in `HANDOFF.md`.
