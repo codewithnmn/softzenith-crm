@@ -8,7 +8,11 @@ Multi-tenant CRM platform. Each customer business is a tenant; the first is **We
 |---|---|---|---|
 | REST API | `backend/` | Java 21, Spring Boot 4, PostgreSQL, Flyway, Spring Modulith | 8081 |
 | Staff UI | `frontend/` | Next.js 16, Tailwind v4, shadcn/ui, SWR, typed client generated from the OpenAPI spec | 3000 |
-| Western World website | `sites/westernworld/` | Next.js (separate app; its forms post to the CRM public intake) | 3001 |
+
+Tenant websites are **not** in this repository. A tenant's own public site (e.g. Western World's, in
+[codewithnmn/westernworld-website](https://github.com/codewithnmn/westernworld-website)) lives in its own repo and talks
+to the CRM only through the public enquiry API (`/api/v1/public/tenants/{slug}/...`). Tenants without a site use the
+CRM's hosted enquiry page at `/enquiry/<slug>`.
 
 More docs: [CLAUDE.md](CLAUDE.md) (architecture rules, for developers and AI agents) ·
 [HANDOFF.md](HANDOFF.md) (current status and next task) · [docs/flows.md](docs/flows.md) (flows, permissions, debugging) ·
@@ -31,8 +35,12 @@ More docs: [CLAUDE.md](CLAUDE.md) (architecture rules, for developers and AI age
 - **Mailpit** (local mail catcher, https://mailpit.axllent.org), the inbox at http://localhost:8025.
 - Install the UI dependencies once:
   ```powershell
-  cd frontend; npm install; cd ..\sites\westernworld; npm install; cd ..\..
+  cd frontend; npm install; cd ..
   ```
+
+> Optional: to have `.\dev` also start a tenant website you have cloned next to this repo, copy
+> `.dev-sites.example.json` to `.dev-sites.json` (not committed) and list it there, e.g.
+> `[{ "Name": "Western World site", "Dir": "../westernworld-website", "Port": 3001 }]`.
 
 > `scripts/dev.ps1` looks for Postgres in `%LOCALAPPDATA%\Programs\pgsql` (data in `%LOCALAPPDATA%\crm-pgdata`) and Mailpit
 > in `%LOCALAPPDATA%\Programs\mailpit\mailpit.exe`. If yours are installed elsewhere, edit the paths at the top of
@@ -43,7 +51,7 @@ More docs: [CLAUDE.md](CLAUDE.md) (architecture rules, for developers and AI age
 ```powershell
 .\dev              # (re)start everything and wait until each service is up
 .\dev status       # what is running
-.\dev stop         # stop the backend and both UIs
+.\dev stop         # stop the backend, the staff UI and any tenant websites
 .\dev stop -All    # also stop Postgres and Mailpit
 ```
 
@@ -55,7 +63,7 @@ Once it reports everything as running:
 | Public enquiry form (demo tenant) | http://localhost:3000/enquiry/demo |
 | API docs (Swagger) | http://localhost:8081/swagger-ui.html |
 | Email inbox (Mailpit) | http://localhost:8025 |
-| Western World website | http://localhost:3001 |
+| A tenant website listed in `.dev-sites.json` | its port, e.g. http://localhost:3001 |
 | Platform console (SoftZenith admins) | http://localhost:3000/platform — `softzenith` / `local-platform-admin` (dev only) |
 
 The first backend start takes a minute or two (dependencies download, Flyway builds the schema, demo data is seeded).
@@ -68,7 +76,6 @@ Mailpit first (`mailpit`; SMTP on 1025). Then, one terminal each:
 ```sh
 cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev     # API on :8081
 cd frontend && npm install && npm run dev                                # staff UI on :3000
-cd sites/westernworld && npm install && npm run dev -- -p 3001           # optional website on :3001
 ```
 
 The `dev` profile seeds a neutral demo tenant ("Demo Visas", slug `demo`) and enables phone-only sign-in.
@@ -110,7 +117,6 @@ Roadmap and the current task: [HANDOFF.md](HANDOFF.md).
 ```
 backend/     Spring Boot API (src/main/java/com/softzenith/crm/<module>; Flyway migrations in src/main/resources/db/migration)
 frontend/    Staff UI (Next.js App Router); lib/api-schema.d.ts is generated, do not edit
-sites/       Public websites (sites/westernworld)
 docs/        Flows, onboarding runbook, doc generator
 scripts/     dev.ps1 (behind .\dev)
 ```
@@ -162,7 +168,7 @@ Nothing is required for local development; defaults point at the local Postgres 
 | `CRM_PLATFORM_JWT_SECRET`, `CRM_PLATFORM_ADMIN_USERNAME`, `CRM_PLATFORM_ADMIN_PASSWORD` | dev values in `application-dev.yml` | Platform console; required with the prod profile |
 | frontend `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | empty = dev login | see `frontend/.env.example` |
 
-Full lists: `backend/.env.example`, `frontend/.env.example`, `sites/westernworld/.env.example`.
+Full lists: `backend/.env.example`, `frontend/.env.example`. A tenant website's settings are in its own repo.
 
 ## Authentication
 
@@ -178,7 +184,7 @@ branches, invited staff). Runbook: [docs/onboarding.md](docs/onboarding.md). Its
 
 ## Troubleshooting
 
-- **Port already in use**: 8081 (API), 3000 (staff UI), 3001 (website). `.\dev` only stops processes from this repo and
+- **Port already in use**: 8081 (API), 3000 (staff UI), and any tenant website port in `.dev-sites.json`. `.\dev` only stops processes from this repo and
   warns about anything else holding a port; stop that program or change the port.
 - **Backend cannot connect to the database**: check Postgres is running on 5432 and the `crm` database / `crm_app` role exist.
 - **No emails in Mailpit**: check Mailpit is running (`.\dev status`). The app keeps working without it, the sends are logged as failed.

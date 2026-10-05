@@ -1,13 +1,16 @@
 <#
 .SYNOPSIS
-  Local development environment: Postgres, Mailpit, backend API, staff UI and the Western World site.
+  Local development environment: Postgres, Mailpit, backend API, staff UI, and any tenant websites you have checked out.
 
 .DESCRIPTION
   Run it through dev.cmd in the repository root:
     .\dev            stop the app services if they are running, then start everything (default)
-    .\dev stop       stop the backend and both UIs
+    .\dev stop       stop the backend, the staff UI and any tenant websites
     .\dev stop -All  also stop Postgres and Mailpit
     .\dev status     show what is running
+
+  Tenant websites live in their own repositories. To start them too, list them in .dev-sites.json at the repository
+  root (not committed; copy .dev-sites.example.json).
 
   The backend and the UIs each open in their own window (title "CRM - ..."), so their logs stay visible. Only
   processes started from this repository are stopped: if another program holds one of the ports, it is left alone.
@@ -27,14 +30,33 @@ $StateFile = Join-Path $Root '.dev-pids.json'
 $Apps = @(
     @{ Name = 'Backend API'; Port = 8081; Dir = 'backend'; Wait = 240
        Cmd = '.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=dev"'
-       Check = 'http://localhost:8081/actuator/health'; Open = 'http://localhost:8081/swagger-ui.html' },
+       # Readiness, not /actuator/health: the aggregate also folds in the mail indicator, so a missing
+       # Mailpit would report 503 and make the wait below time out on an API that is actually serving.
+       Check = 'http://localhost:8081/actuator/health/readiness'; Open = 'http://localhost:8081/swagger-ui.html' },
     @{ Name = 'Staff UI'; Port = 3000; Dir = 'frontend'; Wait = 120
        Cmd = 'npm run dev'
-       Check = 'http://localhost:3000/login'; Open = 'http://localhost:3000' },
-    @{ Name = 'Western World site'; Port = 3001; Dir = 'sites\westernworld'; Wait = 120
-       Cmd = 'npm run dev -- -p 3001'
-       Check = 'http://localhost:3001/'; Open = 'http://localhost:3001' }
+       Check = 'http://localhost:3000/login'; Open = 'http://localhost:3000' }
 )
+
+# Tenant websites (separate repositories, e.g. ..\westernworld-website) from the untracked .dev-sites.json.
+$SitesFile = Join-Path $Root '.dev-sites.json'
+$OwnDirs = @($Root)
+if (Test-Path $SitesFile) {
+    # Assigned first: in Windows PowerShell 5.1, ConvertFrom-Json emits a JSON array as one object.
+    $sites = Get-Content $SitesFile -Raw | ConvertFrom-Json
+    foreach ($site in $sites) {
+        $dir = if ([IO.Path]::IsPathRooted($site.Dir)) { $site.Dir } else { Join-Path $Root $site.Dir }
+        if (-not (Test-Path (Join-Path $dir 'package.json'))) {
+            Write-Warning "Skipping $($site.Name): no package.json in $dir"
+            continue
+        }
+        $dir = (Resolve-Path $dir).Path
+        $OwnDirs += $dir
+        $Apps += @{ Name = $site.Name; Port = [int] $site.Port; Dir = $dir; Wait = 120
+                    Cmd = "npm run dev -- -p $($site.Port)"
+                    Check = "http://localhost:$($site.Port)/"; Open = "http://localhost:$($site.Port)" }
+    }
+}
 
 function Get-ListenerPid([int] $Port) {
     $c = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
@@ -47,7 +69,9 @@ function Test-FromThisRepo([int] $ProcessId) {
     if (-not $p -or -not $p.CommandLine) { return $false }
     $cmd = $p.CommandLine.Replace('/', '\').ToLowerInvariant()
     # spring-boot:run starts the API with its classpath in a temp file, so it is recognised by its main class.
-    return $cmd.Contains($Root.ToLowerInvariant()) -or $cmd.Contains('com.softzenith.crm.crmapplication')
+    if ($cmd.Contains('com.softzenith.crm.crmapplication')) { return $true }
+    foreach ($d in $OwnDirs) { if ($cmd.Contains($d.ToLowerInvariant())) { return $true } }
+    return $false
 }
 
 function Stop-Tree([int] $ProcessId) {
@@ -113,12 +137,18 @@ function Start-Infra {
         & (Join-Path $PgBin 'pg_ctl.exe') -D $PgData -l (Join-Path $PgData 'server.log') -w start | Out-Null
         if (-not (Test-Postgres)) { throw "Postgres did not start; see $PgData\server.log" }
     }
-    if (Get-ListenerPid 8025) {
+    # 1025 is the SMTP port the backend sends through; 8025 is only the inbox UI.
+    if (Get-ListenerPid 1025) {
         Write-Host 'Mailpit already running.' -ForegroundColor DarkGray
     } elseif (Test-Path $Mailpit) {
         Start-Process -FilePath $Mailpit -WindowStyle Hidden
+        for ($i = 0; $i -lt 20; $i++) {
+            if (Get-ListenerPid 1025) { break }
+            Start-Sleep -Milliseconds 500
+        }
+        if (-not (Get-ListenerPid 1025)) { Write-Warning 'Mailpit did not open SMTP port 1025; sending email will fail.' }
     } else {
-        Write-Warning "Mailpit not found at $Mailpit; emails will fail to send (the app keeps working)."
+        Write-Warning "Mailpit not found at $Mailpit; sending email will fail (the rest of the app keeps working)."
     }
 }
 
@@ -126,7 +156,7 @@ function Start-Apps {
     $ids = @()
     foreach ($app in $Apps) {
         Write-Host "Starting $($app.Name)..."
-        $dir = Join-Path $Root $app.Dir
+        $dir = if ([IO.Path]::IsPathRooted($app.Dir)) { $app.Dir } else { Join-Path $Root $app.Dir }
         $command = "`$Host.UI.RawUI.WindowTitle = 'CRM - $($app.Name)'; Set-Location -LiteralPath '$dir'; $($app.Cmd)"
         # Encoded, because Start-Process drops the inner quotes (and PowerShell 5.1 would then split -Dspring-boot...=dev).
         $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($command))

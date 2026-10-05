@@ -39,7 +39,7 @@ Employee code).
    in one step: all of it or nothing. Nobody is messaged.
 6. After going live:
    - Their enquiry form works at `/enquiry/<slug>`. Send a test enquiry and check it arrives.
-   - **Western World's website** (`sites/westernworld`): set `NEXT_PUBLIC_CRM_TENANT=westernworld` (the default) so its
+   - **Western World's website** (own repo, `codewithnmn/westernworld-website`): set `NEXT_PUBLIC_CRM_TENANT=westernworld` (the default) so its
      forms send enquiries to this business.
    - Staff sign in at **`/login`** with their mobile number. Their first sign-in activates them (status Invited → Active).
    - Their Admin adds or changes staff and branches under **Staff** and **Branches**.
